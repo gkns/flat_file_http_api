@@ -60,3 +60,4 @@ replay_pid*
 derby_data_dir/
 .mvn/
 .DS_Store
+.camel/
