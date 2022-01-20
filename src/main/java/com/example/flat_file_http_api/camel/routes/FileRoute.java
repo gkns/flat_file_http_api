@@ -1,11 +1,11 @@
 package com.example.flat_file_http_api.camel.routes;
 
+import com.example.flat_file_http_api.camel.processors.TextRecordToDatabaseQueryProcessor;
+
 import javax.sql.DataSource;
 
 import com.example.flat_file_http_api.models.Session;
 
-import org.apache.camel.Exchange;
-import org.apache.camel.Processor;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.dataformat.BindyDataFormat;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,18 +30,7 @@ public class FileRoute extends RouteBuilder {
                 .split(body().tokenize("\n"))
                 .streaming()
                 .unmarshal(dataFormat)
-                .process(new Processor() {
-                    @Override
-                    public void process(Exchange msg) throws Exception {
-                        Session sessionInfo = msg.getIn().getBody(Session.class);
-                        String query = ("INSERT INTO session_logs (session_id, username, timestamp)"
-                                + " VALUES (\'%s\', \'%s\', \'%s\')")
-                                .formatted(sessionInfo.getSessionId(),
-                                sessionInfo.getUserName(),
-                                sessionInfo.getTimeStamp()
-                        );
-                        msg.getIn().setBody(query);
-                    }
-                }).to("jdbc:dataSource");
+                .process(new TextRecordToDatabaseQueryProcessor())
+                .to("jdbc:dataSource");
     }
 }

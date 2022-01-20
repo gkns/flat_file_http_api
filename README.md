@@ -11,7 +11,8 @@ Why Derby embedded DB:
 
 How to scale this:
     Derby is not the right choice of database.
-    We can split the database at a million record or such, But ideally we will run a timeseries database and make camel-route output data into that.
+    For existing implementation, We can split the database at a million record or such,
+    But ideally we will run a timeseries database and make camel-route output data into that.
 
 Design
 ---
@@ -29,5 +30,5 @@ Implementation sepcifics:
 * File component of apache camel library is used for injesting the data from text files.
 * Camel runs continuously in a multi-threaded mode, injesting data from the files placed under %input_files_folder% in application.properties,
 and unmarshall each record-line from the text file to a model and diverts this structured data to the DB.
-
-
+unmarshalling is aided by the Camel Bindy Data format, which readily parses the records, with effectively no string operations.
+* Camel uses multiple threads (no. of avaliable cores on the system).
