@@ -9,9 +9,6 @@ public class FlatFileHttpApiApplication extends Main{
 
 	public static void main(String[] args) {
 		SpringApplication.run(FlatFileHttpApiApplication.class, args);
-
-		FlatFileHttpApiApplication app = new FlatFileHttpApiApplication();
-
 	}
 
 }

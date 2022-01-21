@@ -44,7 +44,7 @@ public class TextRecordToDatabaseQueryProcessorTest {
     private String sampleMsgBody = "2000-01-01T17:25:49Z ddedric_strosin@adams.co.uk"
             + " dfad33e7-f734-4f70-af29-c42f2b467142\n";
 
-    // Have to use BeforeEach instead of BeforeAll becuase we need the -
+    // Have to use BeforeEach instead of BeforeAll because we need the -
     // Camel context initialized to get the endpoint of the Route under test (FileRoute)
     @BeforeEach
     public void setUp() throws Exception{
@@ -56,7 +56,8 @@ public class TextRecordToDatabaseQueryProcessorTest {
 
     @AfterEach
     public void tearDown() throws Exception{
-        // Replace the destination Endpoint for testing purposes
+        // Undo the modification to destination Endpoint
+        // This is essential because adviceWith is executed before each test -
         AdviceWith.adviceWith(context, "textFileRecordRouter", a->
                 a.weaveByToUri("mock:test").replace().to("jdbc:dataSource"));
     }
@@ -95,6 +96,5 @@ public class TextRecordToDatabaseQueryProcessorTest {
         mockEndpoint.assertIsSatisfied();
 
     }
-
 
 }

@@ -8,12 +8,18 @@ import javax.persistence.TypedQuery;
 
 import com.example.flat_file_http_api.models.Session;
 import com.example.flat_file_http_api.util.Utils;
+
+import org.apache.camel.CamelContext;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class SessionDataRepositoryImpl {
     @PersistenceContext
     EntityManager entityManager;
+
+    @Autowired
+    CamelContext camelContext;
 
     public Session[] findSessionsInTimeRange(String fromDate_, String toDate_) {
         // strip trailing 'Z' since, LocalDateTime is agnostic of timezone.

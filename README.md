@@ -22,6 +22,13 @@ How to scale this:
     For existing implementation, We can split the database at a million record or such,
     But ideally we will run a timeseries database and make camel-route output data into that.
 
+**Known pending improvements:**
+1. check if Camel is currently processing, on API call, If result not found respond with an appropriate error
+advising retry after sometime.
+2. Change to an appropriate database.
+3. Use prepared statements at places where SQL is used, to avoid SQL Injection.
+4. 
+
 Design
 ---
 
@@ -34,6 +41,7 @@ On a high level, we have two main tasks in this application:
 - Data files can be added when the application is running, and they will be processed and added to the DB.
 - New record formats can be easily plugged using Camel components.
 - New data sources (other than file) can be easily plugged.
+- The embedded DB is located at the directory named: **derby_data_dir** in the working directory.
 
 [2] Can be optimized, explained in : **Why Derby embedded DB**
 
@@ -50,14 +58,16 @@ and unmarshall each record-line from the text file to a model and diverts this s
 How to run this:
 ---
 Remember to set the property: **input_files_folder** in **application.properties**
+Or add the command-line parameter: -Dspring-boot.run.arguments=--input_files_folder=/input/files/path/
+
 to an appropriate directory in your system containing the sample\*.txt which contains the recoreds in the given format:
 Eg: `2000-01-01T17:25:49Z dedric_strosin@adams.co.uk dfad33e7-f734-4f70-af29-c42f2b467142`
 
 **Run command:**
 
-`./mvnw spring-boot:run`
+`./mvnw spring-boot:run <-Dspring-boot.run.arguments=--input_files_folder=/location-of-input-text-files/>`
 
-**Note: ** First run might take time, to download dependencies and build.
+**Note: ** First run might take time, to download dependencies, build and processing the text data.
 
 Screenshots:
 ---
