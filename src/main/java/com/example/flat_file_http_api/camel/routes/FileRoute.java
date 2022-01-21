@@ -24,8 +24,16 @@ public class FileRoute extends RouteBuilder {
     public void configure() {
         BindyDataFormat dataFormat = new BindyDataFormat();
         dataFormat.setClassType(Session.class);
+        // Even though this reads CSV, Bindy doesn't mandate it is CSV -
+        // it can be any delimiter separated value (XSV)
         dataFormat.setType("Csv");
+        // We do not want to block other messages (lines in input file) in case -
+        // one of the line is not properly formatted/as per spec.
+        // this faulty record will be ignored. We can do custom processing too.
+        onException(Exception.class).continued(true);
+
         from("file://%s".formatted(environment.getProperty("input_files_folder")))
+                .routeId("textFileRecordRouter")
                 .threads(Runtime.getRuntime().availableProcessors())
                 .split(body().tokenize("\n"))
                 .streaming()

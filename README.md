@@ -1,6 +1,13 @@
 Assumptions:
 ---
-File IO based search is eliminated because:
+There is always the scope for improvement :), That being the maxim.
+
+**Why use Apache camel and not something from scratch:**
+Camel is purpose built for applications like this,
+Where data needs to flow from one system to another.
+And designing the file watching+parsing+transforming by hand, is almost like a part of re-implementing camel.
+
+**File IO based search is eliminated because:**
 1. Consumes a lot of time for each API call.
 2. We cannot make use of the timestamp format for effective querying, unless the data is in-memory.
 3. If we preprocess, create index and search using binary/n-ary search, it is similar to the strategy used in databases.
