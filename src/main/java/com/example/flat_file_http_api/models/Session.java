@@ -3,6 +3,8 @@ package com.example.flat_file_http_api.models;
 import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Index;
 import javax.persistence.Table;
@@ -30,6 +32,10 @@ import lombok.ToString;
 @CsvRecord(separator = " ")
 public class Session {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", updatable = false, nullable = false)
+    private Long id;
+
     @Column(name = "session_id")
     @DataField(pos=3, trim=true, delimiter=" ")
     String sessionId;

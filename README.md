@@ -1,6 +1,7 @@
 Assumptions:
 ---
-There is always the scope for improvement :), That being the maxim.
+Due to the nature of the problem, This implementation is a reduced scope implementation, in that, there are multiple possible optimizations.
+
 
 **Why use Apache camel and not something from scratch:**
 Camel is purpose built for applications like this,
@@ -18,16 +19,20 @@ Ideally for range queries, we should go with a timeseries DB, or DBs which have 
 
 How to scale this:
 ---
+**Choice of database:**
     Derby is not the right choice of database.
     For existing implementation, We can split the database at a million record or such,
     But ideally we will run a timeseries database and make camel-route output data into that.
+**Load balancing:**
+    Use camel's in-built loadbalancing component to direct messages to different DB instances.
 
 **Known pending improvements:**
-1. check if Camel is currently processing, on API call, If result not found respond with an appropriate error
-advising retry after sometime.
+1. check if Camel is currently processing, on API call, If result not found respond with an appropriate error advising retry after sometime.
 2. Change to an appropriate database.
-3. Use prepared statements at places where SQL is used, to avoid SQL Injection.
-4. 
+3. Implement pagination for the REST API, so that large ranges wouldn't time out/go over HTTP body size limitations.
+4. File based logging for easier debugging, relatively very easy, due to springboot.
+5. Mid-way in the implmentation, to speed-up DB insertions, I changed to Batch update mode, so one of the Camel processor is unused from the original design.
+
 
 Design
 ---
@@ -54,6 +59,7 @@ and unmarshall each record-line from the text file to a model and diverts this s
 * Unmarshalling is aided by the Camel Bindy Data format, which readily parses the records
 * Camel uses multiple threads (no. of avaliable cores on the system).
 * There is an index created on the "eventTime" column to speed up queries.
+* To speed-up data insertion into the table, Batch query mode is used.
 
 How to run this:
 ---

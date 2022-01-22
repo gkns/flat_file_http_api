@@ -1,25 +1,73 @@
 package com.example.flat_file_http_api.repositories;
 
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.time.LocalDateTime;
+import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import javax.persistence.TypedQuery;
+import javax.sql.DataSource;
 
 import com.example.flat_file_http_api.models.Session;
 import com.example.flat_file_http_api.util.Utils;
 
 import org.apache.camel.CamelContext;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.jdbc.core.BatchPreparedStatementSetter;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
-@Component
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
+@Component("sessionDataRepositoryImpl")
+@RequiredArgsConstructor
+@Slf4j
 public class SessionDataRepositoryImpl {
     @PersistenceContext
     EntityManager entityManager;
 
     @Autowired
     CamelContext camelContext;
+
+    @Value("${sql.insert.qeury}")
+    private String batchInsertSQLQuery;
+
+    private JdbcTemplate jdbcTemplate;
+    private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+
+    @Autowired
+    public void setDataSource(final DataSource dataSource) {
+        jdbcTemplate = new JdbcTemplate(dataSource);
+        namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
+    }
+
+    @Transactional
+    public void save(final List<Session> sessions) {
+    jdbcTemplate.batchUpdate(
+        batchInsertSQLQuery,
+        new BatchPreparedStatementSetter() {
+          @Override
+          public void setValues(PreparedStatement ps, int i) throws SQLException {
+            final Session session = sessions.get(i);
+            String timeStamp = session.getEventTime().format(Utils.DERBY_DATETIME_FORMATTER);
+            ps.setString(1, session.getSessionId());
+            ps.setString(2, session.getEmail());
+            ps.setString(3, timeStamp);
+          }
+
+          @Override
+          public int getBatchSize() {
+            return sessions.size();
+          }
+        });
+        log.info("Saved {} records ...", sessions.size());
+    }
 
     public Session[] findSessionsInTimeRange(String fromDate_, String toDate_) {
         // strip trailing 'Z' since, LocalDateTime is agnostic of timezone.

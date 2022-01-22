@@ -5,6 +5,7 @@ import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class Utils {
@@ -26,5 +27,9 @@ public class Utils {
             }
         }
         return false;
+    }
+
+    public static String localDateTimeToDerbyTimestampFormat(LocalDateTime date) {
+        return date.format(DERBY_DATETIME_FORMATTER);
     }
 }

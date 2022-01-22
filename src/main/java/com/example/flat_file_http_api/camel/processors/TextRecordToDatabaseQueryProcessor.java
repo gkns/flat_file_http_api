@@ -5,14 +5,18 @@ import com.example.flat_file_http_api.util.Utils;
 
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.util.StringUtils;
+
 
 public class TextRecordToDatabaseQueryProcessor implements Processor {
-    Logger log = LoggerFactory.getLogger(TextRecordToDatabaseQueryProcessor.class);
     @Override
     public void process(Exchange msg) {
         Session sessionInfo = msg.getIn().getBody(Session.class);
+        if (StringUtils.hasText(sessionInfo.getSessionId()) ||
+                StringUtils.hasText(sessionInfo.getEmail()) ||
+                StringUtils.hasText(sessionInfo.getEventTime().toString())) {
+            msg.getIn().setBody("");
+        }
         String query =
                 ("INSERT INTO session_logs (session_id, email, event_time)"
                         + " VALUES (\'%s\', \'%s\', \'%s\')")
@@ -20,8 +24,6 @@ public class TextRecordToDatabaseQueryProcessor implements Processor {
                                 sessionInfo.getSessionId(),
                                 sessionInfo.getEmail(),
                                 sessionInfo.getEventTime().format(Utils.DERBY_DATETIME_FORMATTER));
-        // Log the query for debugging, if needed.
-        log.trace(query);
         msg.getIn().setBody(query);
     }
 }

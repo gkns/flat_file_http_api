@@ -46,6 +46,19 @@
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-batch</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-jdbc</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.camel.springboot</groupId>
+			<artifactId>camel-spring-batch-starter</artifactId>
+			<version>${camel.core.version}</version>
+		</dependency>
+		<dependency>
 			<groupId>org.apache.camel.springboot</groupId>
 			<artifactId>camel-spring-boot-bom</artifactId>
 			<version>${camel.core.version}</version>
@@ -77,6 +90,11 @@
 			<artifactId>camel-test-spring-junit5</artifactId>
 			<version>${camel.core.version}</version>
 			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.camel.springboot</groupId>
+			<artifactId>camel-log-starter</artifactId>
+			<version>${camel.core.version}</version>
 		</dependency>
 		<!--
 		<dependency>

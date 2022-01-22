@@ -12,6 +12,7 @@ import org.apache.camel.component.mock.MockEndpoint;
 import org.apache.camel.test.spring.junit5.CamelSpringBootTest;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -26,7 +27,7 @@ import org.springframework.core.env.Environment;
         properties = { "camel.springboot.name=customName" },
         classes = { FileRoute.class }
 )
-
+@Disabled ("The current camel routes doesn't use this procesor.")
 public class TextRecordToDatabaseQueryProcessorTest {
     @Autowired
     Environment environment;
