@@ -15,36 +15,44 @@ import org.apache.camel.dataformat.bindy.annotation.CsvRecord;
 import org.apache.camel.dataformat.bindy.annotation.DataField;
 
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-// Indexed by timestamp
-@Table(name = "session_logs", indexes = { @Index(name = "IDX_TIMESTAMP", columnList = "event_time") })
+// Hibernate Index by timestamp
+@Table(
+    name = "session_logs",
+    indexes = {@Index(name = "IDX_TIMESTAMP", columnList = "event_time")})
 @Entity
+
 // Lombok
 @Getter
 @Setter
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode
+
+// Bindy
 @CsvRecord(separator = " ")
 public class Session {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", updatable = false, nullable = false)
-    private Long id;
+  @Column(name = "session_id")
+  @DataField(pos = 3, trim = true, delimiter = " ")
+  String sessionId;
 
-    @Column(name = "session_id")
-    @DataField(pos=3, trim=true, delimiter=" ")
-    String sessionId;
+  @DataField(pos = 1, trim = true, delimiter = " ", pattern = Utils.UTC_TIMESTAMP_FORMATTER_PATTERN)
+  @Column(name = "event_time", columnDefinition = "TIMESTAMP")
+  LocalDateTime eventTime;
 
-    @DataField(pos = 1, trim = true, delimiter = " ", pattern = Utils.UTC_TIMESTAMP_FORMATTER_PATTERN)
-    @Column(name = "event_time", columnDefinition = "TIMESTAMP")
-    LocalDateTime eventTime;
+  @DataField(pos = 2, trim = true, delimiter = " ")
+  @Column(name = "email")
+  String email;
 
-    @DataField(pos=2, trim=true, delimiter=" ")
-    @Column(name = "email")
-    String email;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "id", updatable = false, nullable = false)
+  @EqualsAndHashCode.Exclude
+  private Long id;
 }

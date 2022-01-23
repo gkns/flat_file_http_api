@@ -13,11 +13,10 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @ControllerAdvice
 public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
 
-    @ExceptionHandler(Exception.class)
-    protected ResponseEntity<Object> handle(
-            Exception ex, WebRequest request) {
-        String msg = ((APIException)ex).getCustomMessage();
-        return handleExceptionInternal(ex, msg,
-                new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR, request);
-    }
+  @ExceptionHandler(Exception.class)
+  protected ResponseEntity<Object> handle(Exception ex, WebRequest request) {
+    String msg = ((APIException) ex).getCustomMessage();
+    return handleExceptionInternal(
+        ex, msg, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR, request);
+  }
 }

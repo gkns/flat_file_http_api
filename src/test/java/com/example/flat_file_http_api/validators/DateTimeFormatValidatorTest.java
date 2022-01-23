@@ -10,21 +10,22 @@ import org.junit.jupiter.api.TestInstance;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class DateTimeFormatValidatorTest {
-    static DateTimeFormatValidator validator;
+  static DateTimeFormatValidator validator;
 
-    @BeforeEach
-    public void setUp() {
-        validator = new DateTimeFormatValidator();
-    }
+  @BeforeEach
+  public void setUp() {
+    validator = new DateTimeFormatValidator();
+  }
 
-    @Test
-    public void testValidation() throws InvalidDateFormatException {
-        validator.validISO8601DateTimeFormat("2000-01-01T17:25:49Z");
-    }
+  @Test
+  public void testValidation() throws InvalidDateFormatException {
+    validator.validISO8601DateTimeFormat("2000-01-01T17:25:49Z");
+  }
 
-    @Test
-    public void testValidationThrowsOnInvalidFormat() throws InvalidDateFormatException {
-        assertThrows(InvalidDateFormatException.class,
-                () -> validator.validISO8601DateTimeFormat("2000-01-01T17:25:Z"));
-    }
+  @Test
+  public void testValidationThrowsOnInvalidFormat() throws InvalidDateFormatException {
+    assertThrows(
+        InvalidDateFormatException.class,
+        () -> validator.validISO8601DateTimeFormat("2000-01-01T17:25:Z"));
+  }
 }
