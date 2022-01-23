@@ -1,3 +1,21 @@
+Design
+---
+
+**On a high level, we have two main tasks in this application:**
+
+1. Injesting data from the text files and store it in a structured format, for easy querying.
+2. Expose HTTP endpoint for accessing the injested data.
+
+[1] Is taken care in this preliminary implementation in a more robust way, In that:
+
+- Incoming data-files are processed in a continuous and memory efficient way (streaming)
+- Data files can be added when the application is running, and they will be processed and added to the DB.
+- New record formats can be easily plugged using Camel components.
+- New data sources (other than file) can be easily plugged.
+- The embedded DB is located at the directory named: **derby_data_dir** in the working directory.
+
+[2] Can be optimized, explained in : **Why Derby embedded DB**
+
 Assumptions:
 ---
 Due to the nature of the problem, This implementation is a reduced scope implementation, in that, there are multiple
@@ -62,24 +80,6 @@ Use camel's in-built loadbalancing component to direct messages to different DB 
 10. Although implemented in Java-17, not really using much of its new features, we can use Records for some classes.
 11. Lot of negative test-cases in the UTs.
 
-Design
----
-
-**On a high level, we have two main tasks in this application:**
-
-1. Injesting data from the text files and store it in a structured format, for easy querying.
-2. Expose HTTP endpoint for accessing the injested data.
-
-[1] Is taken care in this preliminary implementation in a more robust way, In that:
-
-- Incoming data-files are processed in a continuous and memory efficient way (streaming)
-- Data files can be added when the application is running, and they will be processed and added to the DB.
-- New record formats can be easily plugged using Camel components.
-- New data sources (other than file) can be easily plugged.
-- The embedded DB is located at the directory named: **derby_data_dir** in the working directory.
-
-[2] Can be optimized, explained in : **Why Derby embedded DB**
-
 Implementation specifics:
 ---
 
@@ -115,3 +115,9 @@ Eg: `2000-01-01T17:25:49Z dedric_strosin@adams.co.uk dfad33e7-f734-4f70-af29-c42
 
 Screenshots:
 ---
+If the below files are not rendering on Markdown viewer, Please see 'screenshots' folder
+
+![Alt text](https://github.com/gkns/flat_file_http_api/blob/master/screenshots/Screenshot%202022-01-20%20at%204.38.39%20PM.png?raw=true)
+![Alt text](https://github.com/gkns/flat_file_http_api/blob/master/screenshots/Screenshot%202022-01-20%20at%204.38.53%20PM.png?raw=true)
+![Alt text](https://github.com/gkns/flat_file_http_api/blob/master/screenshots/Screenshot%202022-01-20%20at%204.37.43%20PM.png?raw=true)
+![Alt text](https://github.com/gkns/flat_file_http_api/blob/master/screenshots/Screenshot%202022-01-22%20at%206.55.40%20PM.png?raw=true)
